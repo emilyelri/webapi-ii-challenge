@@ -137,16 +137,22 @@ router.put('/:id', (req, res) => {
         // If the _post_ with the specified `id` is not found:
         if(!post.length) {
             res.status(404).json({ message: "The post with the specified ID does not exist." });
-        }
+        } else {
         db.update(id, update)
         .then(data => {
-            json.status(200).json(data);
+            db.findById(id)
+            .then(post => {
+                res.status(200).json(post);
+            })
+            .catch(err => {
+                console.log(err)
+            })
         })
         .catch(err => {
             console.log("Error!", err);
             res.status(500).json({ error: "The post information could not be modified." });
         });
-    });
+    }});
 });
 
 module.exports = router;
